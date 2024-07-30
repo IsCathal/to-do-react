@@ -9,10 +9,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Todo = function (_React$Component) {
   _inherits(Todo, _React$Component);
 
-  function Todo() {
+  function Todo(props) {
     _classCallCheck(this, Todo);
 
-    return _possibleConstructorReturn(this, (Todo.__proto__ || Object.getPrototypeOf(Todo)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Todo.__proto__ || Object.getPrototypeOf(Todo)).call(this, props));
+
+    console.log(props);
+    _this.state = {
+      done: _this.props.done == "true" && props.done,
+      text: props.text
+    };
+    return _this;
   }
 
   _createClass(Todo, [{
@@ -27,8 +34,8 @@ var Todo = function (_React$Component) {
         React.createElement(
           "span",
           null,
-          React.createElement("input", { type: "checkbox", checked: checked }),
-          React.createElement("input", { type: "text", value: text })
+          React.createElement("input", { type: "checkbox", checked: this.state.done }),
+          React.createElement("input", { type: "text", value: this.state.text })
         )
       );
     }
@@ -37,4 +44,4 @@ var Todo = function (_React$Component) {
   return Todo;
 }(React.Component);
 
-ReactDOM.render(React.createElement(Todo, { text: "Todo", done: "false" }), document.getElementById('root'));
+ReactDOM.render(React.createElement(Todo, { text: "Todo", done: "true" }), document.getElementById('root'));
