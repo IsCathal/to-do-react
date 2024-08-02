@@ -1,4 +1,10 @@
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
 
 var _createClass = function () {
   function defineProperties(target, props) {
@@ -38,18 +44,45 @@ var Todo = function (_React$Component) {
 
     console.log(props);
     _this.state = {
-      done: _this.props.done == "true" && props.done,
+      done: props.done,
       text: props.text
     };
     _this.handelClick = _this.handelClick.bind(_this);
+    _this.handleChange = _this.handleChange.bind(_this);
+    _this.handleSubmit = _this.handleSubmit.bind(_this);
     return _this;
   }
 
   _createClass(Todo, [{
     key: "handelClick",
     value: function handelClick(event) {
-      this.setState({ done: !this.state.done });
-      console.log('I an clicked');
+      this.setState(function (state) {
+        return {
+          done: !state.done
+        };
+      }, function (event) {
+        this.handleSubmit(event);
+      });
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(event) {
+      var text = event.target.value;
+
+      this.setState(function (state) {
+        return {
+          text: text
+        };
+      });
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(event) {
+      console.log("This is where the submit will happen!");
+
+      //this.setState(state => ({
+
+      // }));
     }
   }, {
     key: "render",
@@ -57,11 +90,64 @@ var Todo = function (_React$Component) {
       var checked = this.props.done;
       var text = this.props.text;
 
-      return React.createElement("div", { className: "todo" }, React.createElement("span", null, React.createElement("input", { type: "checkbox", checked: this.state.done, onClick: this.handelClick }), React.createElement("input", { type: "text", value: this.state.text })));
+      return React.createElement("div", { className: "todo" }, React.createElement("span", null, React.createElement("input", { type: "checkbox", checked: this.state.done,
+        onClick: this.handelClick }), React.createElement("input", { type: "text", value: this.state.text,
+        className: this.state.done ? 'done' : 'not-done',
+        onChange: this.handleChange,
+        onBlur: this.handleSubmit })));
     }
   }]);
 
   return Todo;
 }(React.Component);
 
-ReactDOM.render(React.createElement(Todo, { text: "Todo", done: "true" }), document.getElementById('root'));
+var TodoList = function (_React$Component2) {
+  _inherits(TodoList, _React$Component2);
+
+  function TodoList(props) {
+    _classCallCheck(this, TodoList);
+
+    var _this2 = _possibleConstructorReturn(this, (TodoList.__proto__ || Object.getPrototypeOf(TodoList)).call(this, props));
+
+    _this2.state = { todos: [{
+        _id: 'a',
+        text: 'Item 1',
+        done: false
+      }, {
+        _id: 'a',
+        text: 'Item 1',
+        done: true
+      }] };
+    _this2.newTodo = _this2.newTodo.bind(_this2);
+    return _this2;
+  }
+
+  _createClass(TodoList, [{
+    key: "newTodo",
+    value: function newTodo(event) {
+      event.preventDefault();
+
+      todos = this.state.todos;
+      todos.push({ _id: "" });
+
+      this.setState(function (state) {
+        return {
+          todos: todos
+        };
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var todoList = this.state.todos.map(function (todo) {
+        return React.createElement(Todo, { key: todo._id.toString(), text: todo.text, done: todo.done });
+      });
+
+      return React.createElement(React.Fragment, null, React.createElement("h1", null, " React Todo App "), todoList, React.createElement("a", { href: "#", onClick: this.newTodo }, "New Todo"));
+    }
+  }]);
+
+  return TodoList;
+}(React.Component);
+
+ReactDOM.render(React.createElement(TodoList, null), document.getElementById('root'));
